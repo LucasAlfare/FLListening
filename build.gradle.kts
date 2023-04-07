@@ -1,6 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.8.0"
-    application
+    kotlin("jvm") version "1.6.10"
 }
 
 group = "com.lucasalfare.fllistening"
@@ -18,10 +17,6 @@ tasks.test {
     useJUnitPlatform()
 }
 
-kotlin {
-    jvmToolchain(8)
-}
-
-application {
-    mainClass.set("MainKt")
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "11"
 }
