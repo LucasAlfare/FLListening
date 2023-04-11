@@ -104,7 +104,7 @@ abstract class EventManageable {
    * - [data]: any kind of data that can be associated to this event
    * - [origin]: optional field to hold the instance from where this event was fired
    */
-  fun notifyListeners(event: AppEvent, data: Any? = null, origin: Any? = null) {
+  fun notifyListeners(event: Any, data: Any? = null, origin: Any? = null) {
     listeners.forEach {
       it.onEvent(event, data, origin)
     }
