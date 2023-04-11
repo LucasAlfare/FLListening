@@ -2,7 +2,7 @@ package com.lucasalfare.fllistener
 
 
 enum class MyEvent(val appEvent: AppEvent) {
-  TestEvent(event("TestEvent"))
+  TestEvent(eventFactory("TestEvent"))
 }
 
 

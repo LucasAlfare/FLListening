@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
  */
 data class AppEvent(val identifier: Any)
 
-fun event(identifier: Any) = AppEvent(identifier)
+fun eventFactory(identifier: Any) = AppEvent(identifier)
 
 
 /**
