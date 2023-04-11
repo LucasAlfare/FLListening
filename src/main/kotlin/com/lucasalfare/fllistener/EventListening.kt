@@ -53,7 +53,7 @@ abstract class EventManageable {
    * this manager is not initiated and when this local managers is
    * finnally initiated.
    */
-  fun initialize() {
+  internal fun initialize() {
     while (true) {
       if (!initiated) {
         onNotInitiated()
