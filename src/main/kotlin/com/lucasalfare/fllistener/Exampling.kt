@@ -20,7 +20,7 @@ class Manager1 : EventManageable() {
     println("Manager 1 received its needed value This is the value: [$neededValueToInitializeThisManager]. Finishing...")
   }
 
-  override fun onEvent(event: AppEvent, data: Any?, origin: Any?) {
+  override fun onEvent(event: Any, data: Any?, origin: Any?) {
     if (event == MyEvent.TestEvent.appEvent) {
       neededValueToInitializeThisManager = data as String
     }
@@ -33,7 +33,7 @@ class Manager2 : EventManageable() {
   private val start = System.currentTimeMillis()
 
   override fun onNotInitiated() {
-    if (elapsed < 5000) {
+    if (elapsed < 2000) {
       elapsed = System.currentTimeMillis() - start
     } else {
       this.initiated = true
@@ -41,10 +41,11 @@ class Manager2 : EventManageable() {
   }
 
   override fun onInitiated() {
+    println("${this.javaClass.name} finished.")
     this.notifyListeners(MyEvent.TestEvent.appEvent, "Kkkkkkkk !!!")
   }
 
-  override fun onEvent(event: AppEvent, data: Any?, origin: Any?) {
+  override fun onEvent(event: Any, data: Any?, origin: Any?) {
 
   }
 }
@@ -66,7 +67,7 @@ class Manager3 : EventManageable() {
     println("${this.javaClass.name} finished after $elapsed milliseconds.")
   }
 
-  override fun onEvent(event: AppEvent, data: Any?, origin: Any?) {
+  override fun onEvent(event: Any, data: Any?, origin: Any?) {
 
   }
 }

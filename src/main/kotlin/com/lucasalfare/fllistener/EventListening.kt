@@ -7,11 +7,17 @@ import kotlinx.coroutines.launch
 
 
 /**
- * This type represents a padronized type of event description
+ * This type represents a standard type of event description
  * to transit over the application flow.
+ *
+ * Even the library accepts events of type [Any], is recommended
+ * to use this type instead.
  */
 data class AppEvent(val identifier: Any)
 
+/**
+ * Creates an [AppEvent] instance with the supplied [identifier].
+ */
 fun eventFactory(identifier: Any) = AppEvent(identifier)
 
 
@@ -25,6 +31,9 @@ fun eventFactory(identifier: Any) = AppEvent(identifier)
  */
 abstract class EventManageable {
 
+  /**
+   * Flags this manager as initiated or not initiated.
+   */
   var initiated = false
 
   /**
@@ -33,12 +42,18 @@ abstract class EventManageable {
   var listeners = mutableListOf<EventManageable>()
 
   /**
-   * Function that offers a custom initialization block.
+   * Method that performs a custom initialization for this manager.
    *
    * Normally this is the first function to be called, after
    * constructor and/or native init blocks.
+   *
+   * Also, this method checks, indefinitely for the initialization
+   * of this manager by checking the [initiated] field. This is done
+   * in order to switch between appropriated methods that runs when
+   * this manager is not initiated and when this local managers is
+   * finnally initiated.
    */
-  fun init() {
+  fun initialize() {
     while (true) {
       if (!initiated) {
         onNotInitiated()
@@ -49,15 +64,23 @@ abstract class EventManageable {
     }
   }
 
+  /**
+   * This method is called infinite/indefinitely while this manager
+   * don't flag itself as initiated through the field [initiated].
+   */
   abstract fun onNotInitiated()
 
+  /**
+   * This method is called always that this manager flag itself as
+   * initiated, through the field [initiated].
+   */
   abstract fun onInitiated()
 
   /**
    * Used to handle any kind of incoming event/data from outside
    * the instance.
    */
-  abstract fun onEvent(event: AppEvent, data: Any?, origin: Any?)
+  abstract fun onEvent(event: Any, data: Any?, origin: Any?)
 
   /**
    * Takes any object that can listen/handle events and adds it in this instance.
@@ -98,7 +121,7 @@ abstract class EventManageable {
  */
 class UIManager : EventManageable() {
 
-  private val callbacks = mutableListOf<(AppEvent, Any?) -> Unit>()
+  private val callbacks = mutableListOf<(Any, Any?) -> Unit>()
 
   override fun onNotInitiated() {
     initiated = true
@@ -108,18 +131,18 @@ class UIManager : EventManageable() {
 
   }
 
-  override fun onEvent(event: AppEvent, data: Any?, origin: Any?) {
+  override fun onEvent(event: Any, data: Any?, origin: Any?) {
     callbacks.forEach { callback ->
       callback(event, data)
     }
   }
 
-  fun addCallback(callback: (AppEvent, Any?) -> Unit): (AppEvent, Any?) -> Unit {
+  fun addCallback(callback: (Any, Any?) -> Unit): (Any, Any?) -> Unit {
     if (!callbacks.contains(callback)) callbacks.add(callback)
     return callback
   }
 
-  fun removeCallback(callback: (AppEvent, Any?) -> Unit) {
+  fun removeCallback(callback: (Any, Any?) -> Unit) {
     callbacks.remove(callback)
   }
 }
@@ -130,6 +153,7 @@ class UIManager : EventManageable() {
  * managers synchronously.
  */
 suspend fun setupManagers(vararg managers: EventManageable) {
+  // attaches all the managers to each other
   managers.forEach { m1 ->
     managers.forEach { m2 ->
       if (m2 != m1) {
@@ -138,10 +162,11 @@ suspend fun setupManagers(vararg managers: EventManageable) {
     }
   }
 
+  // performs asynchronous initializations to all the managers
   coroutineScope {
     managers.forEach { manager ->
       launch {
-        manager.init()
+        manager.initialize()
       }
     }
   }
