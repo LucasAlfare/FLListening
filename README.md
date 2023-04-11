@@ -20,8 +20,8 @@ Having the general explanation done, let's consider more detailed with this exam
 - When `Manager2` finnally finishes it performs
   ```kotlin
     this.notifyListeners(
-      MyAppEvents.TestEvent.appEvent,
-      "this is the resulting value processed here on Manager2."
+      event = MyAppEvents.TestEvent.appEvent,
+      data  = "this is the resulting value processed here on Manager2."
     )
     ```
 - As `Manager1` also still alive and running, when it receives that event notification sended from `Manager2` it can, finnally finish its own initialization using the received value attached to the event.
