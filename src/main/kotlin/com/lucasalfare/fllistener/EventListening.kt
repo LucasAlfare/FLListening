@@ -2,12 +2,17 @@
 
 package com.lucasalfare.fllistener
 
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+
 
 /**
  * This type represents a padronized type of event description
  * to transit over the application flow.
  */
 data class AppEvent(val identifier: Any)
+
+fun event(identifier: Any) = AppEvent(identifier)
 
 
 /**
@@ -20,6 +25,8 @@ data class AppEvent(val identifier: Any)
  */
 abstract class EventManageable {
 
+  var initiated = false
+
   /**
    * Holds all current objects that are listening to this instance.
    */
@@ -31,7 +38,20 @@ abstract class EventManageable {
    * Normally this is the first function to be called, after
    * constructor and/or native init blocks.
    */
-  abstract fun init()
+  fun init() {
+    while (true) {
+      if (!initiated) {
+        onNotInitiated()
+      } else {
+        onInitiated()
+        break
+      }
+    }
+  }
+
+  abstract fun onNotInitiated()
+
+  abstract fun onInitiated()
 
   /**
    * Used to handle any kind of incoming event/data from outside
@@ -80,7 +100,13 @@ class UIManager : EventManageable() {
 
   private val callbacks = mutableListOf<(AppEvent, Any?) -> Unit>()
 
-  override fun init() {}
+  override fun onNotInitiated() {
+    initiated = true
+  }
+
+  override fun onInitiated() {
+
+  }
 
   override fun onEvent(event: AppEvent, data: Any?, origin: Any?) {
     callbacks.forEach { callback ->
@@ -102,10 +128,8 @@ class UIManager : EventManageable() {
  * Custom helper method to define relationship between different
  * event manageables instances. This method also initializes all the
  * managers synchronously.
- *
- * TODO: make initialization calls run asynchronously.
  */
-fun setupManagers(vararg managers: EventManageable) {
+suspend fun setupManagers(vararg managers: EventManageable) {
   managers.forEach { m1 ->
     managers.forEach { m2 ->
       if (m2 != m1) {
@@ -114,5 +138,11 @@ fun setupManagers(vararg managers: EventManageable) {
     }
   }
 
-  managers.forEach { it.init() }
+  coroutineScope {
+    managers.forEach { manager ->
+      launch {
+        manager.init()
+      }
+    }
+  }
 }
