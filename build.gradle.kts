@@ -1,6 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.8.10"
-
+    kotlin("jvm") version "1.6.10"
 }
 
 group = "com.lucasalfare.fllistening"
@@ -11,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     testImplementation(kotlin("test"))
 }
 
