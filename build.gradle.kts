@@ -21,3 +21,7 @@ tasks.test {
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
 }
+
+tasks.withType<JavaCompile> {
+    targetCompatibility = "17"
+}
