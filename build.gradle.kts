@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.8.20"
+    `maven-publish`
 }
 
 group = "com.lucasalfare.fllistening"
@@ -18,6 +19,10 @@ tasks.test {
     useJUnitPlatform()
 }
 
-//tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-//    kotlinOptions.jvmTarget = "17"
-//}
+publishing {
+    publications {
+        create<MavenPublication>("Maven") {
+            from(components["kotlin"])
+        }
+    }
+}
