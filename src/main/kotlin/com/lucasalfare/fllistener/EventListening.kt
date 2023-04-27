@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
  * This type represents a standard type of event description
  * to transit over the application flow.
  *
- * Even the library accepts events of type [Any], is recommended
+ * Even the project API accepts events of type [Any], is recommended
  * to use this type instead.
  */
 data class AppEvent(val identifier: Any)
@@ -19,7 +19,6 @@ data class AppEvent(val identifier: Any)
  * Creates an [AppEvent] instance with the supplied [identifier].
  */
 fun eventFactory(identifier: Any) = AppEvent(identifier)
-
 
 /**
  * This class is used to make children to be able to receive events from other [EventManageable]
@@ -54,14 +53,8 @@ abstract class EventManageable {
    * finnally initiated.
    */
   internal fun initialize() {
-    while (true) {
-      if (!initiated) {
-        onNotInitiated()
-      } else {
-        onInitiated()
-        break
-      }
-    }
+    while (!initiated) onNotInitiated()
+    onInitiated()
   }
 
   /**
@@ -119,7 +112,7 @@ abstract class EventManageable {
  * UI components in order to make then emit application events and receive
  * then as well.
  */
-class UIManager : EventManageable() {
+class CallbacksManager : EventManageable() {
 
   private val callbacks = mutableListOf<(Any, Any?) -> Unit>()
 
