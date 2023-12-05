@@ -6,7 +6,7 @@ This aims to help me to decouple code by turning coding sections more separeted 
 
 # The implementation
 
-In this project we have a central piece of code called `EventManageable`. This is an abstract type and make all its actual implementations reffers to code capable of either receive events notifications from others either send event notifications to others.
+In this project we have a central piece of code called `EventManageable`. This is an abstract type and make all of its actual implementations reffers to codes which aree capable of either receive events notifications from others either send event notifications to others.
 
 In this way, should be estabilished a minimal connection between those event manageables and this is made by adding the references of each other in a local list. This doesn't create more data, just creates pointers in respective lists to target the other living manageables of a project.
 
@@ -24,11 +24,11 @@ Having the general explanation done, let's consider more detailed with this exam
       data  = "this is the resulting value processed here on Manager2."
     )
     ```
-- As `Manager1` also still alive and running, when it receives that event notification sended from `Manager2` it can, finnally finish its own initialization using the received value attached to the event.
+- As `Manager1` also still alive and running, when it receives that event notification sent from `Manager2` it can, finnally, to finish its own initialization using the received value/data attached to the event.
 
-As you can see, this is a rough example, but it works to show how the project handles the asynchronous blocks.
+As you can see, this is a rough example, but it works to demonstrate how the project handles the asynchronous blocks.
 
-By the end, is important to know that the projects consider that events are an instance of the data class `AppEvent`. This was made to abstract the event types in order to use another structures, such as `enums`. Without this, normally should be considered that events could be `String`, but was thought that this must contains a lot of duplicated fields. For example:
+By the end, is important to know that the project consider that events are an instance of the data class called `AppEvent`. This was made to abstract the event types, in order to use another structures, such as `enums`. Without this, normally should be considered that events could be `String`, but was thought that this must contains a lot of duplicated raw code text. For example:
 
 ```kotlin
 const val MY_EVENT_IDENTIFIER_1 = "MY_EVENT_IDENTIFIER_1"
@@ -42,4 +42,4 @@ enum class MyEvent(val appEvent: AppEvent) {
 }
 ```
 
-As you can see, this approach still dupicating the labls, but we should follow this direction on next updates.
+As you can see, this approach still duplicating the labls, but we should follow this direction on next updates.
