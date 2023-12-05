@@ -30,6 +30,20 @@ Having the general explanation done, let's consider more detailed with this exam
 
 As you can see, this is a rough example, but it works to demonstrate how the project handles the asynchronous blocks.
 
+# Setting up listeners
+
+As seen above, we need establish some kind of "connection" between the "`managers`" pieces. This is done by calling the auxiliary built-in function `setupManagers()`.
+This function takes as argument a `vararg`, being its items typed as `EventManageable`:
+
+```kotlin
+val manager1 = Manager1()
+val manager2 = Manager2()
+
+setupManagers(manager1, manager2);
+```
+
+After calling the `setupManagers()` function, all managers declared in the `vararg` will be able to send notifications to others and receive notification from others as well.
+
 # Events declaration
 
 By the end, is important to know that the project consider that events are an instance of the data class called `AppEvent`. This was made to abstract the event types, in order to use another structures, such as `enums`. Without this, normally should be considered that events could be `String`, but was thought that this must contains a lot of duplicated raw code text. For example:
