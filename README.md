@@ -12,7 +12,7 @@ In this way, should be estabilished a minimal connection between those event man
 
 # Asynchronous initiations
 
-Before we start explaning an example, is also important to know that this project includes a machanism to automatically initialzes the manager pieces asynchronously. This means, for example, if a `manager1` initizlization depends on something that is processed by another `manager2` and, by its time, this other manager perform some havy work in their initializations, the assynchronous initialization should make the `manager1` "waits" for `manager2` to finish, giving time to `manager2` fire some notification that `manager1` is waiting for.
+Is important important to know that this project includes a machanism to automatically initialzes the manager pieces asynchronously. This means, for example, if a `manager1` initizlization depends on something that is processed by another `manager2` and, by its time, this other manager perform some havy work in their initializations, the assynchronous initialization should make the `manager1` "waits" for `manager2` to finish, giving time to `manager2` fire some notification that `manager1` is waiting for.
 
 Having the general explanation done, let's consider more detailed with this example:
 
