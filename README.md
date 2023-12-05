@@ -10,6 +10,8 @@ In this project we have a central piece of code called `EventManageable`. This i
 
 In this way, should be estabilished a minimal connection between those event manageables and this is made by adding the references of each other in a local list. This doesn't create more data, just creates pointers in respective lists to target the other living manageables of a project.
 
+# Asynchronous initiations
+
 Before we start explaning an example, is also important to know that this project includes a machanism to automatically initialzes the manager pieces asynchronously. This means, for example, if a `manager1` initizlization depends on something that is processed by another `manager2` and, by its time, this other manager perform some havy work in their initializations, the assynchronous initialization should make the `manager1` "waits" for `manager2` to finish, giving time to `manager2` fire some notification that `manager1` is waiting for.
 
 Having the general explanation done, let's consider more detailed with this example:
@@ -28,6 +30,8 @@ Having the general explanation done, let's consider more detailed with this exam
 
 As you can see, this is a rough example, but it works to demonstrate how the project handles the asynchronous blocks.
 
+# Events declaration
+
 By the end, is important to know that the project consider that events are an instance of the data class called `AppEvent`. This was made to abstract the event types, in order to use another structures, such as `enums`. Without this, normally should be considered that events could be `String`, but was thought that this must contains a lot of duplicated raw code text. For example:
 
 ```kotlin
@@ -43,3 +47,4 @@ enum class MyEvent(val appEvent: AppEvent) {
 ```
 
 As you can see, this approach still duplicating the labls, but we should follow this direction on next updates.
++
