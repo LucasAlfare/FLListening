@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/LucasAlfare/FLListening.svg)](https://jitpack.io/#LucasAlfare/FLListening)
+
 # FLListening
 
 FLListening is a Kotlin project that offers a versatile base class for managing events and listeners, facilitating seamless event handling and communication across various components of your application.
