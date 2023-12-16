@@ -1,64 +1,79 @@
-# FLListener
+# FLListening
 
-This is my custom implementation for observer/listener/event driven project patterns using pure Kotlin and its Coroutines.
+FLListening is a Kotlin project that offers a versatile base class for managing events and listeners, facilitating seamless event handling and communication across various components of your application.
 
-This aims to help me to decouple code by turning coding sections more separeted from thenselves. This is achieved by making these parts interacting only through event notifications, instead of direct references/calls.
+# Download
+You can use this library with [Jitpack](https://jitpack.io/). Add the following to your `build.gradle`:
+```groovy
+repositories {
+  // ...
+  maven { url 'https://jitpack.io' }
+}
 
-# The implementation
-
-In this project we have a central piece of code called `EventManageable`. This is an abstract type and make all of its actual implementations reffers to codes which aree capable of either receive events notifications from others either send event notifications to others.
-
-In this way, should be estabilished a minimal connection between those event manageables and this is made by adding the references of each other in a local list. This doesn't create more data, just creates pointers in respective lists to target the other living manageables of a project.
-
-# Asynchronous initiations
-
-Is important important to know that this project includes a machanism to automatically initialzes the manager pieces asynchronously. This means, for example, if a `manager1` initizlization depends on something that is processed by another `manager2` and, by its time, this other manager perform some havy work in their initializations, the assynchronous initialization should make the `manager1` "waits" for `manager2` to finish, giving time to `manager2` fire some notification that `manager1` is waiting for.
-
-Having the general explanation done, let's consider more detailed with this example:
-
-- A project contains two managers: `Manager1` and `Manager2`;
-- `Manager1` needs to initialize its stuff but, for this, for some reason, it needs of something that is processed inside `Manager2` initialization;
-- `Manager2` is a really slow code, that perform really heavy undefined loops, but finishable;
-- When `Manager2` finnally finishes it performs
-  ```kotlin
-    this.notifyListeners(
-      event = MyAppEvents.TestEvent.appEvent,
-      data  = "this is the resulting value processed here on Manager2."
-    )
-    ```
-- As `Manager1` also still alive and running, when it receives that event notification sent from `Manager2` it can, finnally, to finish its own initialization using the received value/data attached to the event.
-
-As you can see, this is a rough example, but it works to demonstrate how the project handles the asynchronous blocks.
-
-# Setting up listeners
-
-As seen above, we need establish some kind of "connection" between the "`managers`" pieces. This is done by calling the auxiliary built-in function `setupManagers()`.
-This function takes as argument a `vararg`, being its items typed as `EventManageable`:
-
-```kotlin
-val manager1 = Manager1()
-val manager2 = Manager2()
-
-setupManagers(manager1, manager2);
-```
-
-After calling the `setupManagers()` function, all managers declared in the `vararg` will be able to send notifications to others and receive notification from others as well.
-
-# Events declaration
-
-By the end, is important to know that the project consider that events are an instance of the data class called `AppEvent`. This was made to abstract the event types, in order to use another structures, such as `enums`. Without this, normally should be considered that events could be `String`, but was thought that this must contains a lot of duplicated raw code text. For example:
-
-```kotlin
-const val MY_EVENT_IDENTIFIER_1 = "MY_EVENT_IDENTIFIER_1"
-```
-
-Clearly there are another good ways to deal with it, but, for now, we are suggesting to use something like this:
-
-```kotlin
-enum class MyEvent(val appEvent: AppEvent) {
-  ThisIsOneOfMyEvents(eventFactory("ThisIsOneOfMyEvents"))
+dependencies {
+  implementation 'com.github.LucasAlfare:FLListening:v2.0'
 }
 ```
 
-As you can see, this approach still duplicating the labls, but we should follow this direction on next updates.
-+
+Or if you are using `kotlin-DSL` in an `build.gradle.kts` file:
+```kotlin
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.LucasAlfare:FLListening:v2.0")
+}
+```
+
+You can also find how to get the library if you are using another dependency manager system, such as `Maven` in this [Jitpack page](https://jitpack.io/#LucasAlfare/FLListening/v2.0).
+
+## EventManageable
+
+`EventManageable` is an abstract class designed to be extended for managing events and listeners. It provides a foundation for implementing event-driven architectures. Key features include:
+
+- **Initialization:** Use the `initialize` method to set up the initial state of your event manager.
+- **Event Notification:** Notify all registered listeners about the occurrence of an event using the `notifyListeners` method.
+- **Event Handling:** Implement the `onEvent` method in your subclass to define custom logic for handling events.
+- **Listener Management:** Add and remove listeners dynamically to control the flow of information.
+
+## Usage
+
+### Setting up Event Managers
+
+To simplify the setup process for multiple `EventManageable` instances, you can use the `setupManagers` function. This function establishes listener relationships among the provided managers and initializes them concurrently using coroutines.
+
+Example:
+
+```kotlin
+val manager1 = SomeEventManageableSubclass() // create your EventManageable instance
+val manager2 = AnotherEventManageableSubclass()// create another EventManageable instance
+
+// Set up managers with listener relationships
+setupManagers(manager1, manager2)
+```
+
+### Creating Custom Event Managers
+
+Create your custom event managers by extending the `EventManageable` class and implementing the required methods:
+
+```kotlin
+class CustomManager : EventManageable() {
+    override suspend fun initialize() {
+        // Initialization logic here
+    }
+
+    override fun onEvent(event: Any, data: Any?) {
+        // Custom event handling logic here
+    }
+}
+```
+
+## Contribution
+
+Feel free to contribute to the project by opening issues or submitting pull requests.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
