@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.LucasAlfare:FLListening:v2.0'
+  implementation 'com.github.LucasAlfare:FLListening:2.0'
 }
 ```
 
@@ -23,11 +23,11 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.LucasAlfare:FLListening:v2.0")
+    implementation("com.github.LucasAlfare:FLListening:2.0")
 }
 ```
 
-You can also find how to get the library if you are using another dependency manager system, such as `Maven` in this [Jitpack page](https://jitpack.io/#LucasAlfare/FLListening/v2.0).
+You can also find how to get the library if you are using another dependency manager system, such as `Maven` in this [Jitpack page](https://jitpack.io/#LucasAlfare/FLListening/2.0).
 
 ## EventManageable
 
